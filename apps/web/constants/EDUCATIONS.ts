@@ -2,24 +2,14 @@ import { Education } from '../types/Education'
 
 export const EDUCATIONS: Education[] = [
    {
-      company: 'Oryol State Technical University (Oryol STU)',
+      company: 'Tashkent University of Information Technologies',
       link: '',
       badges: [],
-      title: 'Mathematician. System programmer. Computer science.',
+      title: 'Computer Science',
       logo: undefined,
-      start: '2012',
-      end: '2014',
-      description: `Master's degree in mathematician, system programming and computer science.`,
-   },
-
-   {
-      company: 'Oryol State Technical University (Oryol STU)',
-      link: '',
-      badges: [],
-      title: 'Mathematician. System programmer. Computer science.',
-      logo: undefined,
-      start: '2007',
-      end: '2012',
-      description: `Bachelor's degree in mathematician, system programming and computer science.`,
+      start: '2006',
+      end: '2010',
+      description: `Co-author of the "Construction of the convex hull of points set in N-dimensional space" article, published in Tashkent IT
+articles collection in 2011 (research, formal algorithm description, implementation)`,
    },
 ]

@@ -10,14 +10,14 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 export const Avatar = ({ resume, className, ...rest }: Props) => {
    return (
-      <div className={cn('flex cursor-pointer', className)} {...rest}>
+      <div className={cn('flex', className)} {...rest}>
          <Image
             src={resume.avatar}
             alt={resume.name}
             width={200}
             height={200}
             className={cn(
-               'aspect-square max-h-32 max-w-32 transition-all duration-300 hover:scale-105',
+               'aspect-square max-h-32 max-w-32 transition-all duration-300',
                false && 'shake'
             )}
          />

@@ -13,16 +13,20 @@ export const Locations = ({ resume, className, ...rest }: Props) => {
    return (
       <div className={cn('flex flex-col gap-0.5', className)} {...rest}>
          {resume.locations.map((location) => (
-            <Link
+            /*<Link
                key={location.link}
                href={location.link}
                title={location.name}
                target="_blank"
                className="flex items-center gap-1.5 hover:underline text-sm text-black/80"
+            >*/
+            <p
+               key={location.name}
+               className="flex items-center gap-1.5 text-sm text-black/80"
             >
                <FontAwesomeIcon icon={faGlobe} className="h-4 w-4" />
                {location.name}
-            </Link>
+            </p>
          ))}
       </div>
    )

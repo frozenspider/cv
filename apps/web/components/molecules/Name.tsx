@@ -10,14 +10,11 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export const Name = ({ resume, className, ...rest }: Props) => {
    return (
       <h1 className={cn('w-full flex flex-col', className)} {...rest}>
-         <Link
-            href={resume.nameLink}
-            target="_blank"
-            className="text-2xl mb-1.5 font-bold hover:underline"
-            title={`${resume.name} ${resume.nick ? `(${resume.nick})` : ''}`}
+         <p
+            className="text-2xl mb-1.5 font-bold"
          >
             {resume.name}
-         </Link>
+         </p>
       </h1>
    )
 }

@@ -26,6 +26,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const CV = ({ resume, className, ...rest }: Props) => {
+   console.log(resume.skills)
    return (
       <div
          className={cn(
@@ -65,8 +66,6 @@ export const CV = ({ resume, className, ...rest }: Props) => {
 
                      <div className="mt-1.5 flex flex-col gap-3">
                         <Links resume={resume} />
-
-                        <Socials resume={resume} />
                      </div>
                   </div>
                   <Avatar
@@ -87,15 +86,15 @@ export const CV = ({ resume, className, ...rest }: Props) => {
 
                <Education resume={resume} className="" />
 
-               <Skills resume={resume} className="" />
+               {resume.skills.length ? <Skills resume={resume} className="" /> : <></>}
 
                <Languages resume={resume} className="" />
 
-               <Projects resume={resume} className="" />
+               {resume.projects.length ? <Projects resume={resume} className="" /> : <></>}
 
                <Characteristics resume={resume} className="hidden" />
 
-               <Contributions resume={resume} className="" />
+               {resume.contributions.length ? <Contributions resume={resume} className="" /> : <></>}
             </div>
 
             <Actions resume={resume} className="" />
