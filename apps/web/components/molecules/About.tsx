@@ -14,9 +14,9 @@ export const About = ({ resume, className, ...rest }: Props) => {
          <Heading level={2} className="">
             About
          </Heading>
-         <Link href={resume.aboutLink} target="_blank">
+         <div>
             {resume.about}
-         </Link>
+         </div>
       </div>
    )
 }
