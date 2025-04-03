@@ -21,13 +21,17 @@ export const Experience = ({ resume, className, ...rest }: Props) => {
                >
                   <div className="flex justify-between items-center flex-wrap">
                      <div className="flex items-center flex-wrap gap-1.5">
-                        <Link
-                           href={experience.link || '#'}
+                        {experience.link ? <Link
+                           href={experience.link}
                            target="_blank"
                            className="text-left font-bold hover:underline"
                         >
                            {experience.company}
-                        </Link>
+                        </Link> : <p
+                           className="text-left font-bold"
+                        >
+                           {experience.company}
+                        </p>}
                         <div className="flex items-center gap-1.5">
                            {experience.badges?.map((badge) => (
                               <span
