@@ -19,12 +19,12 @@ skills = [
 ]
 
 [[socials]]
-name = "linkedin"
-link = "https://www.linkedin.com/in/frozenspider"
-
-[[socials]]
 name = "github"
 link = "https://github.com/frozenspider"
+
+[[socials]]
+name = "linkedin"
+link = "https://www.linkedin.com/in/frozenspider"
 
 [[languages]]
 name = "Russian"
@@ -127,7 +127,7 @@ design to final product testing.
 # Education #
 #############
 
-[[education]]
+[[educations]]
 name = "Tashkent University of Information Technologies"
 link = ""
 badges = []

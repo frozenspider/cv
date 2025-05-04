@@ -1,0 +1,19 @@
+<div class="flex flex-col gap-3 w-full">
+    {{heading(2, "About")}}
+    <div>
+        {% for section in data.about|trim|split('\n\n') %}
+        <p>{{ section }}</p>
+
+        {# loop.next doesn't work here for some reason #}
+        {% if loop.nextitem is defined %}
+        <br>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div>
+        <b>Skills: </b>
+        {% for skill in data.skills %}
+        {{ skill }}{% if not loop.last %} • {% endif %}
+        {% endfor %}
+    </div>
+</div>

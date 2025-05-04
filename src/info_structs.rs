@@ -11,7 +11,7 @@ pub struct InfoData {
     pub languages: Vec<Language>,
     pub locations: Vec<Location>,
     pub experiences: Vec<Experience>,
-    pub education: Vec<Education>,
+    pub educations: Vec<Education>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

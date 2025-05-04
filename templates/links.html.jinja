@@ -1,0 +1,22 @@
+<div class="flex gap-2 items-center">
+    <a href="mailto:{{data.email}}"
+       title="{{data.email}}"
+       target="_blank"
+       class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
+    >
+        <FontAwesomeIcon icon={faEnvelope} class="h-4 w-4"/>
+        {{data.email}}
+    </a>
+
+    {% for social in data.socials %}
+    <a href="{{social.link}}"
+       title="{{social.name}}"
+       target="_blank"
+       class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
+    >
+        <FontAwesomeIcon icon={faGithub} class="h-4 w-4"/>
+        <FontAwesomeIcon icon={faLinkedin} class="h-4 w-4"/>
+        @{{social.link|split('/')|last}}
+    </a>
+    {% endfor %}
+</div>

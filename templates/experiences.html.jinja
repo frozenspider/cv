@@ -1,0 +1,40 @@
+<div class="flex flex-col gap-3 w-full">
+    {{heading(2, "Experience")}}
+
+    <div class="flex w-full gap-3 flex-col">
+        {% for experience in data.experiences %}
+        <div class="flex flex-col">
+            <div class="flex justify-between items-center flex-wrap">
+                <div class="flex items-center flex-wrap gap-1.5">
+                    {% if experience.link %}
+                    <a href={{experience.link}}
+                       target="_blank"
+                       class="text-left font-bold hover:underline">
+                        {{experience.company}}
+                    </a>
+                    {% else %}
+                    <p class="text-left font-bold">
+                        {{experience.company}}
+                    </p>
+                    {% endif %}
+
+                    <div class="flex items-center gap-1.5">
+                        {% for badge in experience.badges %}
+                        <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-sm font-bold transition-colors focus:outline-none text-nowrap border-transparent bg-black/5 text-black">
+                            {{badge}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="italic">{{experience.start}} - {{experience.end if experience.end else "Present"}}</div>
+            </div>
+            <div class="font-semibold flex items-center gap-1.5">
+                {{experience.title}}
+            </div>
+            <div class="text-sm w-full text-black/70">
+                {{experience.description}}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

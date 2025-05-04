@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-3 w-full">
+    {{heading(2, "Languages")}}
+    <div class="flex gap-1.5 flex-wrap">
+        {% for language in data.languages %}
+        <p class="inline-flex items-center rounded-md border px-2 py-0.5 text-sm font-bold transition-colors focus:outline-none text-nowrap border-transparent bg-black/80 text-white"
+           title="{{language.name}} - {{language.level}}">
+            {{language.name}} -
+            <span class="bg-white rounded text-black ml-1.5 leading-none px-1.5 py-0.5">
+                 {{language.level}}
+            </span>
+        </p>
+        {% endfor %}
+    </div>
+</div>

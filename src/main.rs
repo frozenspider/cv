@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 const TEMPLATE_PATH: &str = "templates/";
-const TEMPLATE_FILE_NAME: &str = "hello_world.html";
+const TEMPLATE_FILE_NAME: &str = "_main.html.jinja";
 const INFO_FILE_NAME: &str = "info.toml";
 
 async fn render_template(
@@ -47,6 +47,7 @@ async fn read_static_file(req: HttpRequest) -> actix_web::Result<NamedFile> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // TODO: FontAwesome, Tailwind
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();

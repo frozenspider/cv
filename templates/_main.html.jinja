@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            /* Force add background color to print */
+            -webkit-print-color-adjust: exact !important; /* Chrome, Safari 6 – 15.3, Edge */
+            color-adjust: exact !important; /* Firefox 48 – 96 */
+            print-color-adjust: exact !important; /* Firefox 97+, Safari 15.4+ */
+        }
+    </style>
+    <title>{{ data.name }}</title>
+</head>
+<body>
+
+{% include "utils.html.jinja" %}
+
+<div class='page flex relative justify-center bg-zinc-500 print:bg-none'>
+    <div class="m-0 flex min-h-[297mm] relative w-[210mm] flex-col bg-white p-[10mm] text-base print:bg-none"
+         id="cv">
+        <div class="flex w-full gap-9 flex-col">
+            <div class="flex w-full flex-col-reverse gap-6 justify-between sm:flex-row">
+                <div class="flex flex-col gap-1.5">
+                    <div class="flex flex-col">
+                        {% include "name.html.jinja" %}
+                        {% include "summary.html.jinja" %}
+                    </div>
+
+                    <div class="flex flex-col gap-0.5">
+                        {% for location in data.locations %}
+                        {% include "location.html.jinja" %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-1.5 flex flex-col gap-3">
+                        {% include "links.html.jinja" %}
+                    </div>
+                </div>
+
+                <div class="flex bg-aluminum sm:bg-transparent">
+                    {% include "avatar.html.jinja" %}
+                </div>
+            </div>
+
+            <div class="flex w-full gap-9 flex-col">
+                {% include "about.html.jinja" %}
+
+                <!-- Help resume={resume} class="hidden"/ -->
+
+                <!-- Technologies resume={resume} class="hidden"/ -->
+            </div>
+
+
+            {% include "experiences.html.jinja" %}
+
+            {% include "educations.html.jinja" %}
+
+            <!-- {resume.skills.length ? <Skills resume={resume} class=""/> : <></>} -->
+
+            {% include "languages.html.jinja" %}
+
+            <!-- {resume.projects.length ? <Projects resume={resume} class=""/> : <></>} -->
+        </div>
+    </div>
+</div>
+</body>
+</html>
