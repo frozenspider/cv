@@ -1,22 +1,58 @@
+mod info_structs;
+
+use crate::info_structs::InfoData;
 use actix_web::{App, HttpResponse, HttpServer, ResponseError, web};
 use derive_more::derive::{Display, Error};
 use log::LevelFilter;
 use minijinja::{Environment, context, path_loader};
 use minijinja_autoreload::AutoReloader;
-use std::sync::Arc;
+use std::cell::RefCell;
+use std::fs;
+use std::io::Read;
+use std::sync::{Arc, Mutex};
+
+const TEMPLATE_PATH: &str = "templates/";
+const TEMPLATE_FILE_NAME: &str = "hello_world.html";
+const INFO_FILE_NAME: &str = "info.toml";
 
 async fn render_template(
     reloader: web::Data<Arc<AutoReloader>>,
+    info_cache: web::Data<Arc<Mutex<RefCell<InfoCache>>>>,
 ) -> actix_web::Result<HttpResponse> {
-    let template_name = "hello_world.html";
+    let info_data: Arc<InfoData> = {
+        let mut file = fs::File::open(INFO_FILE_NAME)?;
+        let metadata = file.metadata()?;
+
+        let info_cache = info_cache.lock().unwrap();
+        let mut info_cache = info_cache.borrow_mut();
+        match &*info_cache {
+            InfoCache::Loaded {
+                info: info_data,
+                timestamp,
+            } if *timestamp >= metadata.modified()? => info_data.clone(),
+            _ => {
+                // Reload cache
+                let mut info_data = String::new();
+                file.read_to_string(&mut info_data)?;
+                let info_data: Arc<InfoData> = Arc::new(toml::from_str(&info_data).unwrap());
+                *info_cache = InfoCache::Loaded {
+                    info: info_data.clone(),
+                    timestamp: metadata.modified()?,
+                };
+                info_data
+            }
+        }
+    };
 
     let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
     let template = env
-        .get_template(template_name)
+        .get_template(TEMPLATE_FILE_NAME)
         .map_err(ErrorWrapper::from)?;
 
     // Render the template with the provided name
-    let rendered = template.render(context!()).map_err(ErrorWrapper::from)?;
+    let rendered = template
+        .render(context! { data => *info_data })
+        .map_err(ErrorWrapper::from)?;
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }
 
@@ -27,21 +63,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     let port = 3000;
-    let template_path = "templates/";
 
     let reloader = AutoReloader::new(move |notifier| {
         let mut env = Environment::new();
-        env.set_loader(path_loader(template_path));
-        notifier.watch_path(template_path, true);
+        env.set_loader(path_loader(TEMPLATE_PATH));
+        notifier.watch_path(TEMPLATE_PATH, true);
         Ok(env)
     });
 
     let reloader = Arc::new(reloader);
+    let info_cache = Arc::new(Mutex::new(RefCell::new(InfoCache::NotLoaded)));
 
     // Start the web server
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(reloader.clone()))
+            .app_data(web::Data::new(info_cache.clone()))
             .route("/", web::get().to(render_template))
     })
     .bind(format!("127.0.0.1:{}", port))?
@@ -49,6 +86,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .await?;
 
     Ok(())
+}
+
+enum InfoCache {
+    NotLoaded,
+    Loaded {
+        info: Arc<InfoData>,
+        timestamp: std::time::SystemTime,
+    },
 }
 
 #[derive(Debug, Display, Error)]

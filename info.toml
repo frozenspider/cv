@@ -1,0 +1,141 @@
+name = "Alexander Abdugafarov"
+role = "Software Engineer (Rust)"
+email = "fswork90@gmail.com"
+about = """
+I'm an expert Software Engineer working professionally since 2010.
+
+I have a deep understanding of fundamental algorithms, data structures, design patterns, principles of OOP and FP.
+Additionally, my expertise extends to database internals, query processing, concurrent systems and distributed consensus mechanisms.
+I am proficient at writing high-quality, testable code.
+
+I'm a fast learner, I don't fear complex problems, and programming is my true passion.
+Leave me with a challenging task and a few people to discuss it with, and I'm a happy guy!
+"""
+skills = [
+    "Rust", "Scala",
+    "Distributed Systems", "Cryptography", "Web3", "MVCC",
+    "Math", "Optimization", "Algorithms", "Data Structures",
+    "REST"
+]
+
+[[socials]]
+name = "linkedin"
+link = "https://www.linkedin.com/in/frozenspider"
+
+[[socials]]
+name = "github"
+link = "https://github.com/frozenspider"
+
+[[languages]]
+name = "Russian"
+level = "Native"
+
+[[languages]]
+name = "English"
+level = "Proficient"
+
+[[locations]]
+name = "Tashkent, Uzbekistan"
+
+##############
+# Experience #
+##############
+
+[[experiences]]
+company = "Nethermind"
+link = "https://www.nethermind.io/"
+badges = ["Remote"]
+title = "Sr Software Engineer (Rust)"
+logo = ""
+start = "Jun 2024"
+end = ""
+description = """
+I'm working on several internal web3-related projects related to polynomial commitment, data availability sampling,
+post-quantum cryptography and zkVM execution using Rust-based tech stack.
+"""
+
+[[experiences]]
+company = "Yugabyte"
+link = "https://www.yugabyte.com/"
+badges = ["Remote"]
+title = "Sr Software Engineer (C/C++)"
+logo = ""
+start = "Jan 2019"
+end = "Jan 2023"
+description = """
+I was working on the YSQL layer, integrating PostgreSQL query processor with YugabyteDB engine and optimizing it out.
+I was responsible for both design and implementation of features such as an online upgrade framework to allow bringing
+PostgreSQL metadata to date on the fly, and tablegroups to allow multiple tables to share a sharded storage.
+"""
+
+[[experiences]]
+company = "Business Triangle"
+link = ""
+badges = []
+title = "Software Architect and Sr. Software Engineer (Java, Scala)"
+logo = ""
+start = "Jul 2018"
+end = "Dec 2018"
+description = """
+I was hired to redesign existing Java EE project to move from JSF/PrimeFaces to pure REST/WebSocket API
+"""
+
+[[experiences]]
+company = "Sample6"
+link = ""
+badges = ["Remote"]
+title = "Lead Software Engineer (Java, Groovy)"
+logo = ""
+start = "Aug 2014"
+end = "Feb 2017"
+description = """
+Full-stack developer on Groovy/Grails technology stack.
+
+Responsibilities included support of heavy legacy codebase, gradual vertical refactoring, architecture and system design
+on both front-end and back-end.
+"""
+
+[[experiences]]
+company = "CompStak"
+link = "https://compstak.com/"
+badges = ["Remote"]
+title = "Sr. Software Engineer (Java, Groovy, Scala)"
+logo = ""
+start = "Aug 2012"
+end = "Jul 2014"
+description = """
+Backend Groovy/Grails developer, later moved to Scala/Slick/Spray technology stack.
+Responsibilities included designing complex extendable architectures from scratch, investigating and comparing
+new technologies and libraries, iterative refactoring and extensive test coverage.
+"""
+
+[[experiences]]
+company = "Itilect Inc."
+link = ""
+badges = []
+title = "Software Engineer (Java)"
+logo = ""
+start = "Nov 2010"
+end = "May 2012"
+description = """
+I was the only software developer in a small company, so my responsibilities included everything from architecture
+design to final product testing.
+"""
+
+
+#############
+# Education #
+#############
+
+[[education]]
+name = "Tashkent University of Information Technologies"
+link = ""
+badges = []
+title = "Computer Science"
+logo = ""
+start = 2006
+end = 2010
+description = """
+Co-author of the "Construction of the convex hull of points set in N-dimensional space" article, published in Tashkent IT
+articles collection in 2011 (research, formal algorithm description, implementation)
+"""
