@@ -4,7 +4,7 @@
        target="_blank"
        class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
     >
-        <i class="fa-solid fa-envelope h-4 w-4"></i>
+        <i class="fa-solid fa-envelope fa-lg"></i>
         {{data.email}}
     </a>
 
@@ -14,7 +14,7 @@
        target="_blank"
        class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
     >
-        <i class="fa-brands fa-{{social.name}} h-4 w-4"></i>
+        <i class="fa-brands fa-{{social.name}} fa-lg"></i>
         @{{social.link|split('/')|last}}
     </a>
     {% endfor %}

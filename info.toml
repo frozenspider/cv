@@ -37,6 +37,7 @@ level = "Proficient"
 [[locations]]
 name = "Tashkent, Uzbekistan"
 
+
 ##############
 # Experience #
 ##############
@@ -50,8 +51,9 @@ logo = ""
 start = "Jun 2024"
 end = ""
 description = """
-I'm working on several internal web3-related projects related to polynomial commitment, data availability sampling,
-post-quantum cryptography and zkVM execution using Rust-based tech stack.
+I've recently joined security audit team.
+Before that I was involved with several internal web3-related projects related to polynomial commitment,
+data availability sampling, post-quantum cryptography and zkVM execution using Rust-based tech stack.
 """
 
 [[experiences]]
@@ -137,5 +139,5 @@ start = 2006
 end = 2010
 description = """
 Co-author of the "Construction of the convex hull of points set in N-dimensional space" article, published in Tashkent IT
-articles collection in 2011 (research, formal algorithm description, implementation)
+articles collection in 2011 (research, formal algorithm description, implementation).
 """

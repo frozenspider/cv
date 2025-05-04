@@ -32,7 +32,7 @@
                 {{experience.title}}
             </div>
             <div class="text-sm w-full text-black/70">
-                {{experience.description}}
+                {{experience.description|trim|replace('\n\n', '<br>')}}
             </div>
         </div>
         {% endfor %}

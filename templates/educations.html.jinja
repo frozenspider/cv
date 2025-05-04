@@ -29,7 +29,7 @@
             </div>
             <div>{{education.title}}</div>
             <div class="text-sm w-full text-black/70">
-                {{education.description}}
+                {{education.description|trim|replace('\n\n', '<br>')}}
             </div>
         </div>
         {% endfor %}
