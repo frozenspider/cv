@@ -20,28 +20,8 @@ async fn render_template(
     info_cache: web::Data<Arc<Mutex<RefCell<InfoCache>>>>,
 ) -> actix_web::Result<HttpResponse> {
     let info_data: Arc<InfoData> = {
-        let mut file = fs::File::open(INFO_FILE_NAME)?;
-        let metadata = file.metadata()?;
-
         let info_cache = info_cache.lock().unwrap();
-        let mut info_cache = info_cache.borrow_mut();
-        match &*info_cache {
-            InfoCache::Loaded {
-                info: info_data,
-                timestamp,
-            } if *timestamp >= metadata.modified()? => info_data.clone(),
-            _ => {
-                // Reload cache
-                let mut info_data = String::new();
-                file.read_to_string(&mut info_data)?;
-                let info_data: Arc<InfoData> = Arc::new(toml::from_str(&info_data).unwrap());
-                *info_cache = InfoCache::Loaded {
-                    info: info_data.clone(),
-                    timestamp: metadata.modified()?,
-                };
-                info_data
-            }
-        }
+        info_cache.borrow_mut().read()?
     };
 
     let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
@@ -94,6 +74,33 @@ enum InfoCache {
         info: Arc<InfoData>,
         timestamp: std::time::SystemTime,
     },
+}
+
+impl InfoCache {
+    /// Reads latest info data, either from cache, or from file if it's newer than the cache.
+    /// In the latter case, cache is updated.
+    fn read(&mut self) -> std::io::Result<Arc<InfoData>> {
+        let mut file = fs::File::open(INFO_FILE_NAME)?;
+        let metadata = file.metadata()?;
+
+        match self {
+            InfoCache::Loaded {
+                info: info_data,
+                timestamp,
+            } if *timestamp >= metadata.modified()? => Ok(info_data.clone()),
+            _ => {
+                // Reload cache
+                let mut info_data = String::new();
+                file.read_to_string(&mut info_data)?;
+                let info_data: Arc<InfoData> = Arc::new(toml::from_str(&info_data).unwrap());
+                *self = InfoCache::Loaded {
+                    info: info_data.clone(),
+                    timestamp: metadata.modified()?,
+                };
+                Ok(info_data)
+            }
+        }
+    }
 }
 
 #[derive(Debug, Display, Error)]
