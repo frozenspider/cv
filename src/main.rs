@@ -47,7 +47,6 @@ async fn read_static_file(req: HttpRequest) -> actix_web::Result<NamedFile> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // TODO: FontAwesome, Tailwind
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
         .init();

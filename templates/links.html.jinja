@@ -4,7 +4,7 @@
        target="_blank"
        class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
     >
-        <FontAwesomeIcon icon={faEnvelope} class="h-4 w-4"/>
+        <i class="fa-solid fa-envelope h-4 w-4"></i>
         {{data.email}}
     </a>
 
@@ -14,8 +14,7 @@
        target="_blank"
        class="flex items-center gap-1.5 hover:underline text-sm text-black/80"
     >
-        <FontAwesomeIcon icon={faGithub} class="h-4 w-4"/>
-        <FontAwesomeIcon icon={faLinkedin} class="h-4 w-4"/>
+        <i class="fa-brands fa-{{social.name}} h-4 w-4"></i>
         @{{social.link|split('/')|last}}
     </a>
     {% endfor %}
