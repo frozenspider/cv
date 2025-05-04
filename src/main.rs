@@ -1,14 +1,16 @@
 mod info_structs;
 
 use crate::info_structs::InfoData;
-use actix_web::{App, HttpResponse, HttpServer, ResponseError, web};
+use actix_files::NamedFile;
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, ResponseError};
 use derive_more::derive::{Display, Error};
 use log::LevelFilter;
-use minijinja::{Environment, context, path_loader};
+use minijinja::{context, path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
 use std::cell::RefCell;
 use std::fs;
 use std::io::Read;
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 const TEMPLATE_PATH: &str = "templates/";
@@ -36,6 +38,13 @@ async fn render_template(
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }
 
+/// Serve static files, without any limitations on the path.
+/// Security implications are irrelevant since this will only be used locally.
+async fn read_static_file(req: HttpRequest) -> actix_web::Result<NamedFile> {
+    let path: PathBuf = req.match_info().query("filename").parse()?;
+    Ok(NamedFile::open(path)?)
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::builder()
@@ -60,6 +69,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .app_data(web::Data::new(reloader.clone()))
             .app_data(web::Data::new(info_cache.clone()))
             .route("/", web::get().to(render_template))
+            .route("/{filename:.*}", web::get().to(read_static_file))
     })
     .bind(format!("127.0.0.1:{}", port))?
     .run()
