@@ -21,21 +21,25 @@ async fn render_template(
     reloader: web::Data<Arc<AutoReloader>>,
     info_cache: web::Data<Arc<Mutex<RefCell<InfoCache>>>>,
 ) -> actix_web::Result<HttpResponse> {
-    let info_data: Arc<InfoData> = {
-        let info_cache = info_cache.lock().unwrap();
-        info_cache.borrow_mut().read()?
-    };
+    time(move || {
+        let info_data: Arc<InfoData> = {
+            let info_cache = info_cache.lock().unwrap();
+            info_cache.borrow_mut().read()?
+        };
 
-    let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
-    let template = env
-        .get_template(TEMPLATE_FILE_NAME)
-        .map_err(ErrorWrapper::from)?;
+        let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
+        let template = env
+            .get_template(TEMPLATE_FILE_NAME)
+            .map_err(ErrorWrapper::from)?;
 
-    // Render the template with the provided name
-    let rendered = template
-        .render(context! { data => *info_data })
-        .map_err(ErrorWrapper::from)?;
-    Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
+        // Render the template with the provided name
+        let rendered = template
+            .render(context! { data => *info_data })
+            .map_err(ErrorWrapper::from)?;
+        Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
+    }, |ms| {
+        log::debug!("Rendered in {} ms", ms);
+    })
 }
 
 /// Serve static files, without any limitations on the path.
@@ -76,6 +80,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .await?;
 
     Ok(())
+}
+
+/// Helper function to time the execution of a closure and call a callback with the elapsed time.
+fn time<T>(logic: impl FnOnce() -> T, after_exec: impl FnOnce(u128)) -> T {
+    let start_time = std::time::SystemTime::now();
+    let result = logic();
+    let end_time = std::time::SystemTime::now();
+    let elapsed = end_time.duration_since(start_time).unwrap();
+    after_exec(elapsed.as_millis());
+    result
 }
 
 enum InfoCache {
