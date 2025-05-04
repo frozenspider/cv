@@ -20,7 +20,7 @@ async fn render_template(
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::builder()
         .filter_level(LevelFilter::Debug)
