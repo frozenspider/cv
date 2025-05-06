@@ -1,17 +1,16 @@
-mod info_structs;
+mod data_structs;
 
-use crate::info_structs::InfoData;
+use crate::data_structs::Data;
 use actix_files::NamedFile;
 use actix_web::dev::Service;
 use actix_web::http::header;
 use actix_web::http::header::CacheDirective;
-use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, ResponseError};
+use actix_web::{App, HttpRequest, HttpResponse, HttpServer, ResponseError, web};
 use derive_more::derive::{Display, Error};
 use itertools::Itertools;
 use log::LevelFilter;
-use minijinja::{context, path_loader, Environment};
+use minijinja::{Environment, context, path_loader};
 use minijinja_autoreload::AutoReloader;
-use std::cell::RefCell;
 use std::fs;
 use std::io::Read;
 use std::path::PathBuf;
@@ -19,31 +18,34 @@ use std::sync::{Arc, Mutex};
 
 const TEMPLATE_PATH: &str = "templates/";
 const TEMPLATE_FILE_NAME: &str = "_main.html.jinja";
-const INFO_FILE_NAME: &str = "info.toml";
+const DATA_FILE_NAME: &str = "info.toml";
 
 async fn render_template(
     reloader: web::Data<Arc<AutoReloader>>,
-    info_cache: web::Data<Arc<Mutex<RefCell<InfoCache>>>>,
+    data_cache: web::Data<Arc<Mutex<DataCache>>>,
 ) -> actix_web::Result<HttpResponse> {
-    time(move || {
-        let info_data: Arc<InfoData> = {
-            let info_cache = info_cache.lock().unwrap();
-            info_cache.borrow_mut().read()?
-        };
+    time(
+        move || {
+            let data = {
+                let mut data_cache = data_cache.lock().expect("data cache poisoned");
+                data_cache.read()?
+            };
 
-        let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
-        let template = env
-            .get_template(TEMPLATE_FILE_NAME)
-            .map_err(ErrorWrapper::from)?;
+            let env = reloader.acquire_env().map_err(ErrorWrapper::from)?;
+            let template = env
+                .get_template(TEMPLATE_FILE_NAME)
+                .map_err(ErrorWrapper::from)?;
 
-        // Render the template with the provided name
-        let rendered = template
-            .render(context! { data => *info_data })
-            .map_err(ErrorWrapper::from)?;
-        Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
-    }, |ms| {
-        log::debug!("Rendered in {} ms", ms);
-    })
+            // Render the template with the provided name
+            let rendered = template
+                .render(context! { data => *data })
+                .map_err(ErrorWrapper::from)?;
+            Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
+        },
+        |ms| {
+            log::debug!("Rendered in {} ms", ms);
+        },
+    )
 }
 
 /// Serve static files, without any limitations on the path.
@@ -60,6 +62,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     let port = 3000;
+    let address = format!("localhost:{port}");
 
     let reloader = AutoReloader::new(move |notifier| {
         let mut env = Environment::new();
@@ -69,15 +72,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     let reloader = Arc::new(reloader);
-    let info_cache = Arc::new(Mutex::new(RefCell::new(InfoCache::NotLoaded)));
+    let data_cache = Arc::new(Mutex::new(DataCache::NotLoaded));
 
-    log::info!("Starting server on http://localhost:{port}");
+    log::info!("Starting server on http://{address}");
 
     // Start the web server
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(reloader.clone()))
-            .app_data(web::Data::new(info_cache.clone()))
+            .app_data(web::Data::new(data_cache.clone()))
             .route("/", web::get().to(render_template))
             .route("/{filename:.*}", web::get().to(read_static_file))
             .wrap_fn(|req, srv| {
@@ -96,7 +99,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             })
     })
-    .bind(format!("127.0.0.1:{port}"))?
+    .bind(address)?
+    .workers(1) // No need for multiple workers
     .run()
     .await?;
 
@@ -108,41 +112,46 @@ fn time<T>(logic: impl FnOnce() -> T, after_exec: impl FnOnce(u128)) -> T {
     let start_time = std::time::SystemTime::now();
     let result = logic();
     let end_time = std::time::SystemTime::now();
-    let elapsed = end_time.duration_since(start_time).unwrap();
+    let elapsed = end_time
+        .duration_since(start_time)
+        .expect("Time went backwards");
     after_exec(elapsed.as_millis());
     result
 }
 
-enum InfoCache {
+enum DataCache {
     NotLoaded,
     Loaded {
-        info: Arc<InfoData>,
+        data: Arc<Data>,
         timestamp: std::time::SystemTime,
     },
 }
 
-impl InfoCache {
-    /// Reads latest info data, either from cache, or from file if it's newer than the cache.
+impl DataCache {
+    /// Reads latest CV data, either from cache, or from file if it's newer than the cache.
     /// In the latter case, cache is updated.
-    fn read(&mut self) -> std::io::Result<Arc<InfoData>> {
-        let mut file = fs::File::open(INFO_FILE_NAME)?;
-        let metadata = file.metadata()?;
+    fn read(&mut self) -> std::io::Result<Arc<Data>> {
+        let mut file = fs::File::open(DATA_FILE_NAME)?;
+        let file_metadata = file.metadata()?;
+        let file_modified = file_metadata.modified()?;
 
         match self {
-            InfoCache::Loaded {
-                info: info_data,
-                timestamp,
-            } if *timestamp >= metadata.modified()? => Ok(info_data.clone()),
+            DataCache::Loaded { data, timestamp } if *timestamp >= file_modified => {
+                Ok(data.clone())
+            }
             _ => {
                 // Reload cache
-                let mut info_data = String::new();
-                file.read_to_string(&mut info_data)?;
-                let info_data: Arc<InfoData> = Arc::new(toml::from_str(&info_data).unwrap());
-                *self = InfoCache::Loaded {
-                    info: info_data.clone(),
-                    timestamp: metadata.modified()?,
+                let mut data = String::with_capacity(file_metadata.len() as usize);
+                file.read_to_string(&mut data)?;
+                let data: Arc<Data> = Arc::new(
+                    toml::from_str(&data)
+                        .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?,
+                );
+                *self = DataCache::Loaded {
+                    data: data.clone(),
+                    timestamp: file_modified,
                 };
-                Ok(info_data)
+                Ok(data)
             }
         }
     }
