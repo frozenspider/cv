@@ -16,13 +16,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet">
 
-    <link rel="stylesheet" href="static/styles/globals.css">
-
     <style>
-        @page {
-            size: A4;
-            margin: 0;
-            padding: 0;
+        @media print {
+            @page {
+                size: A4;
+                margin: 10mm;
+                padding: 0;
+            }
+        }
+
+        @media not print {
+            .main-div {
+                padding: 10mm;
+            }
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100%;
         }
 
         .jost-main {
@@ -30,14 +42,8 @@
             font-optical-sizing: auto;
             font-style: normal;
         }
-
-        * {
-            /* Force add background color to print */
-            -webkit-print-color-adjust: exact !important; /* Chrome, Safari 6 – 15.3, Edge */
-            color-adjust: exact !important; /* Firefox 48 – 96 */
-            print-color-adjust: exact !important; /* Firefox 97+, Safari 15.4+ */
-        }
     </style>
+
     <title>{{ data.name }}</title>
 </head>
 <body>
@@ -45,7 +51,7 @@
 {% include "utils.html.jinja" %}
 <main class="jost-main">
     <div class="page flex relative justify-center bg-zinc-500 print:bg-none">
-        <div class="m-0 flex min-h-[297mm] relative w-[210mm] flex-col bg-white p-[10mm] text-base print:bg-none"
+        <div class="main-div m-0 flex min-h-[297mm] relative w-[210mm] flex-col bg-white text-base print:bg-none"
              id="cv">
             <div class="flex w-full gap-9 flex-col">
                 <div class="flex w-full flex-col-reverse gap-6 justify-between sm:flex-row">
