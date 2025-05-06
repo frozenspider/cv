@@ -71,6 +71,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let reloader = Arc::new(reloader);
     let info_cache = Arc::new(Mutex::new(RefCell::new(InfoCache::NotLoaded)));
 
+    log::info!("Starting server on http://localhost:{port}");
+
     // Start the web server
     HttpServer::new(move || {
         App::new()
@@ -94,7 +96,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             })
     })
-    .bind(format!("127.0.0.1:{}", port))?
+    .bind(format!("127.0.0.1:{port}"))?
     .run()
     .await?;
 
