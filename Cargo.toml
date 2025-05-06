@@ -13,6 +13,7 @@ minijinja-autoreload = "2.9.0"
 toml = { version = "0.8.22", features = ["preserve_order"] }
 serde = { version = "1", features = ["std", "derive"] }
 derive_more = "2.0.1"
+itertools = "0.14"
 
 log = "0.4.27"
 env_logger = "0.11.8"

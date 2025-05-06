@@ -2,8 +2,12 @@ mod info_structs;
 
 use crate::info_structs::InfoData;
 use actix_files::NamedFile;
+use actix_web::dev::Service;
+use actix_web::http::header;
+use actix_web::http::header::CacheDirective;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, ResponseError};
 use derive_more::derive::{Display, Error};
+use itertools::Itertools;
 use log::LevelFilter;
 use minijinja::{context, path_loader, Environment};
 use minijinja_autoreload::AutoReloader;
@@ -74,6 +78,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .app_data(web::Data::new(info_cache.clone()))
             .route("/", web::get().to(render_template))
             .route("/{filename:.*}", web::get().to(read_static_file))
+            .wrap_fn(|req, srv| {
+                let fut = srv.call(req);
+                // Do not cache responses
+                async {
+                    let mut res = fut.await?;
+                    let cache_directives = [CacheDirective::NoCache, CacheDirective::NoStore];
+                    let cache_directives =
+                        cache_directives.iter().map(|d| d.to_string()).join(", ");
+                    res.headers_mut().insert(
+                        header::CACHE_CONTROL,
+                        header::HeaderValue::from_str(&cache_directives)?,
+                    );
+                    Ok(res)
+                }
+            })
     })
     .bind(format!("127.0.0.1:{}", port))?
     .run()
