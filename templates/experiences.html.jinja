@@ -9,10 +9,13 @@
                     {% if experience.link %}
                     <a href={{experience.link}}
                        target="_blank"
-                       class="text-left font-bold hover:underline">
+                       class="text-left font-bold hover:underline contents">
+
+                        {% include "company-logo.html.jinja" %}
                         {{experience.company}}
                     </a>
                     {% else %}
+                    {% include "company-logo.html.jinja" %}
                     <p class="text-left font-bold">
                         {{experience.company}}
                     </p>
