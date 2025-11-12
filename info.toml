@@ -13,7 +13,7 @@ Leave me with a challenging task and a few people to discuss it with, and I'm a 
 """
 skills = [
     "Rust", "Scala",
-    "Distributed Systems", "Cryptography", "Web3", "MVCC",
+    "Cryptography", "ZK", "Web3", "Distributed Systems", "MVCC",
     "Math", "Optimization", "Algorithms", "Data Structures",
     "REST"
 ]
@@ -51,9 +51,8 @@ logo = ""
 start = "Jun 2024"
 end = ""
 description = """
-I've recently joined security audit team.
-Before that I was involved with several internal web3-related projects related to polynomial commitment,
-data availability sampling, post-quantum cryptography and zkVM execution using Rust-based tech stack.
+I'm working on several internal web3-related projects related to polynomial commitment, data availability sampling,
+post-quantum cryptography and zkVM execution, and cutting-edge proving systems using Rust-based tech stack.
 """
 
 [[experiences]]

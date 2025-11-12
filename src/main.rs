@@ -62,7 +62,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .init();
 
     let port = 3000;
-    let address = format!("localhost:{port}");
+    let address = format!("0.0.0.0:{port}");
 
     let reloader = AutoReloader::new(move |notifier| {
         let mut env = Environment::new();
