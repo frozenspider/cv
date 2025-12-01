@@ -19,6 +19,12 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Set up Rust toolchain
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Use Rust build cache to speed up builds
+        uses: Swatinem/rust-cache@v2
+
       - name: Build static site
         run: |
           cargo run -- static
