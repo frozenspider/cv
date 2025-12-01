@@ -2,6 +2,7 @@ mod data_structs;
 
 use crate::data_structs::Data;
 use actix_files::NamedFile;
+use actix_web::body::MessageBody;
 use actix_web::dev::Service;
 use actix_web::http::header;
 use actix_web::http::header::CacheDirective;
@@ -15,6 +16,8 @@ use std::fs;
 use std::io::Read;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
+use tokio::fs::File;
+use tokio::io::AsyncWriteExt;
 
 const TEMPLATE_PATH: &str = "templates/";
 const TEMPLATE_FILE_NAME: &str = "_main.html.jinja";
@@ -55,24 +58,12 @@ async fn read_static_file(req: HttpRequest) -> actix_web::Result<NamedFile> {
     Ok(NamedFile::open(path)?)
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    env_logger::builder()
-        .filter_level(LevelFilter::Debug)
-        .init();
-
+async fn start_server(
+    reloader: Arc<AutoReloader>,
+    data_cache: Arc<Mutex<DataCache>>,
+) -> std::io::Result<()> {
     let port = 3000;
     let address = format!("0.0.0.0:{port}");
-
-    let reloader = AutoReloader::new(move |notifier| {
-        let mut env = Environment::new();
-        env.set_loader(path_loader(TEMPLATE_PATH));
-        notifier.watch_path(TEMPLATE_PATH, true);
-        Ok(env)
-    });
-
-    let reloader = Arc::new(reloader);
-    let data_cache = Arc::new(Mutex::new(DataCache::NotLoaded));
 
     log::info!("Starting server on http://{address}");
 
@@ -102,9 +93,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     .bind(address)?
     .workers(1) // No need for multiple workers
     .run()
-    .await?;
-
-    Ok(())
+    .await
 }
 
 /// Helper function to time the execution of a closure and call a callback with the elapsed time.
@@ -117,6 +106,51 @@ fn time<T>(logic: impl FnOnce() -> T, after_exec: impl FnOnce(u128)) -> T {
         .expect("Time went backwards");
     after_exec(elapsed.as_millis());
     result
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env_logger::builder()
+        .filter_level(LevelFilter::Debug)
+        .init();
+
+    let reloader = AutoReloader::new(move |notifier| {
+        let mut env = Environment::new();
+        env.set_loader(path_loader(TEMPLATE_PATH));
+        notifier.watch_path(TEMPLATE_PATH, true);
+        Ok(env)
+    });
+    let reloader = Arc::new(reloader);
+    let data_cache = Arc::new(Mutex::new(DataCache::NotLoaded));
+
+    // Very basic CLI argument parsing
+    let args: Vec<_> = std::env::args().collect();
+    let args = &args[1..];
+    match &args {
+        &[arg] if arg.as_str() == "static" => {
+            let response =
+                render_template(web::Data::new(reloader), web::Data::new(data_cache.clone()))
+                    .await?;
+            let body = response
+                .into_body()
+                .try_into_bytes()
+                .map_err(|e| format!("Can't convert html to bytes: {:?}", e))?;
+            let html = String::from_utf8(body.to_vec())?;
+
+            let mut output_file = File::create("index.html").await?;
+            output_file.write_all(html.as_bytes()).await?;
+        }
+        &[] => {
+            start_server(reloader, data_cache).await?;
+        }
+        _ => {
+            eprintln!(
+                "Usage: either no arguments to start the server, or 'static' to build the static files."
+            );
+        }
+    }
+
+    Ok(())
 }
 
 enum DataCache {
