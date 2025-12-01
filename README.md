@@ -11,6 +11,7 @@ Based on [idimetrix/cv](https://github.com/idimetrix/cv), simplified and ported 
 </details>
 
 All personal information is stored in a single `info.toml` file.
+Images and icons are in the `static/images` folder.
 Templates use Jinja syntax and are stored in `templates` folder.
 
 To run the project, use:

@@ -17,6 +17,7 @@ skills = [
     "Perception", "Endurance", "Luck", "Wisdom",
     "Unarmed", "Melee Weapons", "Energy Weapons", "Taunt"
 ]
+show_company_icons = true
 
 
 # Name will be prepended with "fa-" to use FontAwesome icons, refer to

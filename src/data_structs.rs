@@ -7,6 +7,7 @@ pub struct Data {
     pub email: String,
     pub about: String,
     pub skills: Vec<String>,
+    pub show_company_icons: bool,
     pub socials: Vec<Social>,
     pub languages: Vec<Language>,
     pub locations: Vec<Location>,

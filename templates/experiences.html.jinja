@@ -11,11 +11,11 @@
                        target="_blank"
                        class="text-left font-bold hover:underline contents">
 
-                        {% include "company-logo.html.jinja" %}
+                        {% if data.show_company_icons %}{% include "company-logo.html.jinja" %}{% endif %}
                         {{experience.company}}
                     </a>
                     {% else %}
-                    {% include "company-logo.html.jinja" %}
+                    {% if data.show_company_icons %}{% include "company-logo.html.jinja" %}{% endif %}
                     <p class="text-left font-bold">
                         {{experience.company}}
                     </p>
