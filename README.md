@@ -7,7 +7,7 @@ Based on [idimetrix/cv](https://github.com/idimetrix/cv), simplified and ported 
 <details>
 <summary>This is what CV looks like:</summary>
 
-![cv-builder](https://github.com/user-attachments/assets/aee25388-2c27-4e33-995e-1718ec529da9)
+![cv-builder](https://github.com/user-attachments/assets/6f656b1e-dfce-4429-b787-8f35414d1bc2)
 </details>
 
 All personal information is stored in a single `info.toml` file.
