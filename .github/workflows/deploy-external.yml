@@ -1,0 +1,49 @@
+name: Deploy to External Pages Repo
+
+on:
+  push:
+    branches: ["data"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # This job will only run if the repository variable 'TARGET_REPO' is defined and not empty.
+    # Go to Settings -> Secrets and variables -> Actions -> Variables to set this.
+    # Value format example: "yourusername/yourusername.github.io"
+    if: ${{ vars.TARGET_REPO != '' }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Build static site
+        run: |
+          cargo run -- static
+
+      # Move files to a clean folder so we only push exactly what we want
+      - name: Prepare output directory
+        run: |
+          mkdir dist
+          mv index.html dist/
+          cp -r static dist/
+
+      - name: Deploy to External Repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # This connects to the secret you created in the prerequisites
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+
+          # We use the configuration variable here.
+          external_repository: ${{ vars.TARGET_REPO }}
+
+          # User Pages (username.github.io) usually serve from 'main' or 'master'
+          publish_branch: master
+
+          # The folder we prepared in the previous step
+          publish_dir: ./dist
+
+          # Keeps the commit history clean in the target repo
+          force_orphan: true
