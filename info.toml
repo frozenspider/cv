@@ -1,50 +1,42 @@
-name = "Firstname Lastname"
-role = "My Role"
-email = "me@email.com"
+name = "Alexander Abdugafarov"
+role = "Software Engineer (Rust)"
+email = "fswork90@gmail.com"
 about = """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean interdum lectus libero, at placerat felis feugiat at.
+I'm an expert Software Engineer working professionally since 2010.
 
-Sed malesuada ligula pretium pellentesque fermentum. Phasellus gravida ante augue, eu porta nisi tincidunt in.
-Proin rhoncus fringilla metus, vel mattis leo porttitor nec. Donec sit amet ante quis dolor interdum convallis at ut arcu.
-Aenean in tellus enim. Ut velit nunc, efficitur non fringilla venenatis, posuere non mauris.
-Nulla gravida rutrum ultrices.
+I have a deep understanding of fundamental algorithms, data structures, design patterns, principles of OOP and FP.
+Additionally, my expertise extends to database internals, query processing, concurrent systems and distributed consensus mechanisms.
+I am proficient at writing high-quality, testable code.
 
-Aliquam non dapibus justo. Morbi ornare ante ultrices orci laoreet, et sodales mauris lobortis.
-Mauris condimentum in est sed ultricies. Sed semper sem tellus.
+I'm a fast learner, I don't fear complex problems, and programming is my true passion.
+Leave me with a challenging task and a few people to discuss it with, and I'm a happy guy!
 """
 skills = [
-    "Strength", "Agility", "Intelligence", "Charisma",
-    "Perception", "Endurance", "Luck", "Wisdom",
-    "Unarmed", "Melee Weapons", "Energy Weapons", "Taunt"
+    "Rust", "Scala",
+    "Cryptography", "ZK", "Web3", "Distributed Systems", "MVCC",
+    "Math", "Optimization", "Algorithms", "Data Structures",
+    "REST"
 ]
 show_company_icons = true
 
-
-# Name will be prepended with "fa-" to use FontAwesome icons, refer to
-# https://fontawesome.com/search?ic=free-collection for available icons.
 [[socials]]
 name = "github"
-link = "https://github.com/placeholder"
+link = "https://github.com/frozenspider"
 
 [[socials]]
 name = "linkedin"
-link = "https://www.linkedin.com/in/placeholder"
-
+link = "https://www.linkedin.com/in/frozenspider"
 
 [[languages]]
-name = "English"
+name = "Russian"
 level = "Native"
 
 [[languages]]
-name = "Slur"
+name = "English"
 level = "Proficient"
 
-
 [[locations]]
-name = "Syndey, Australia"
-
-[[locations]]
-name = "Ceres, Asteroid Belt"
+name = "Tashkent, Uzbekistan"
 
 
 ##############
@@ -52,45 +44,87 @@ name = "Ceres, Asteroid Belt"
 ##############
 
 [[experiences]]
-company = "Google"
-link = "https://www.google.com/"
+company = "Nethermind"
+link = "https://www.nethermind.io/"
 badges = ["Remote"]
-title = "Sr Search Specialist (SQL)"
-logo = "google.png"
-start = "Jun 2077"
+title = "Sr Software Engineer (Rust)"
+logo = "nethermind.jpg"
+start = "Jun 2024"
 end = ""
 description = """
-I used to search in Google a lot, so I guess you could say I am a Sr Search Specialist or something.
-Anyway, this is just a placeholder for the experience section anyway, so I might as well put something here.
+I'm a member of zero-knowledge team, researching and implementing bleeding edge zkSNARKs and folding schemes
+based on their published cryptographic research papers.
+
+Before that I was involved with several internal web3-related projects related to polynomial commitment,
+data availability sampling, post-quantum cryptography, security audit and zkVM execution using Rust-based tech stack.
 """
 
 [[experiences]]
-company = "Amazon"
+company = "Yugabyte"
 link = "https://www.yugabyte.com/"
-badges = ["On-site"]
-title = "Sr Software Engineer (C/C±±)"
-logo = "amazon.ico"
-start = "Aug 2020"
-end = "Jun 2077"
+badges = ["Remote"]
+title = "Sr Software Engineer (C/C++)"
+logo = "yb.jpg"
+start = "Jan 2019"
+end = "Jan 2023"
 description = """
-Aliquam non dapibus justo. Morbi ornare ante ultrices orci laoreet, et sodales mauris lobortis.
-Mauris condimentum in est sed ultricies. Sed semper sem tellus.
-
-Ut velit nunc, efficitur non fringilla venenatis, posuere non mauris.
-Nulla gravida rutrum ultrices.
+I was working on the YSQL layer, integrating PostgreSQL query processor with YugabyteDB engine and optimizing it out.
+I was responsible for both design and implementation of features such as an online upgrade framework to allow bringing
+PostgreSQL metadata to date on the fly, and tablegroups to allow multiple tables to share a sharded storage.
 """
 
 [[experiences]]
-company = "Facebook"
+company = "Business Triangle"
 link = ""
 badges = []
-title = "Test Subject"
+title = "Software Architect and Sr. Software Engineer (Java, Scala)"
 logo = ""
-start = "44 AD"
-end = "Aug 2020"
+start = "Jul 2018"
+end = "Dec 2018"
 description = """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean interdum lectus libero, at placerat felis feugiat at.
-Ut velit nunc, efficitur non fringilla venenatis, posuere non mauris.
+I was hired to redesign existing Java EE project to move from JSF/PrimeFaces to pure REST/WebSocket API
+"""
+
+[[experiences]]
+company = "Sample6"
+link = ""
+badges = ["Remote"]
+title = "Lead Software Engineer (Java, Groovy)"
+logo = "corvium.jpg"
+start = "Aug 2014"
+end = "Feb 2017"
+description = """
+Full-stack developer on Groovy/Grails technology stack.
+
+Responsibilities included support of heavy legacy codebase, gradual vertical refactoring, architecture and system design
+on both front-end and back-end.
+"""
+
+[[experiences]]
+company = "CompStak"
+link = "https://compstak.com/"
+badges = ["Remote"]
+title = "Sr. Software Engineer (Java, Groovy, Scala)"
+logo = "compstak.png"
+start = "Aug 2012"
+end = "Jul 2014"
+description = """
+Backend Groovy/Grails developer, later moved to Scala/Slick/Spray technology stack.
+Responsibilities included designing complex extendable architectures from scratch, investigating and comparing
+new technologies and libraries, iterative refactoring and extensive test coverage.
+"""
+
+[[experiences]]
+company = "Itilect Inc."
+link = ""
+badges = []
+title = "Software Engineer (Java)"
+logo = ""
+start = "Nov 2010"
+end = "May 2012"
+description = """
+I was the only software developer in a small company, so my responsibilities included everything from architecture
+design to final product testing.
 """
 
 
@@ -99,7 +133,7 @@ Ut velit nunc, efficitur non fringilla venenatis, posuere non mauris.
 #############
 
 [[educations]]
-name = "Matrian University of Information Technologies"
+name = "Tashkent University of Information Technologies"
 link = ""
 badges = []
 title = "Computer Science"
@@ -107,6 +141,6 @@ logo = ""
 start = 2006
 end = 2010
 description = """
-Co-author of the "Introduction to Intergalactic Programming" textbook.
-Graduated with honors, specializing in advanced quantum computing and interstellar data transmission.
+Co-author of the "Construction of the convex hull of points set in N-dimensional space" article, published in Tashkent IT
+articles collection in 2011 (research, formal algorithm description, implementation).
 """
